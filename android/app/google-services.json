@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "862607190708",
+    "project_id": "kaocher-firebase",
+    "storage_bucket": "kaocher-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862607190708:android:8e653ef367235f52da45e1",
+        "android_client_info": {
+          "package_name": "com.example.kaocher_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "862607190708-2jfu6q1778cuc1q0l6ctvc38m1fqscjm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWlNp0-McN8zMG3XKjsjjElTEJmgLhfKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "862607190708-2jfu6q1778cuc1q0l6ctvc38m1fqscjm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

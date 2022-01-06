@@ -8,6 +8,7 @@ import 'package:kaocher_firebase/helper/custom_button.dart';
 import 'package:kaocher_firebase/helper/custom_text_field.dart';
 import 'package:kaocher_firebase/screen/home_page.dart';
 import 'package:kaocher_firebase/screen/sign_up.dart';
+import 'package:kaocher_firebase/screen/user_profile.dart';
 import 'package:kaocher_firebase/utills/all_color.dart';
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -15,13 +16,14 @@ class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
 }
- GlobalKey<FormState> _formKey=GlobalKey();
+
 final _auth = FirebaseAuth.instance;
 AllColor allColor= AllColor();
 TextEditingController _emailController= TextEditingController();
 TextEditingController _passController= TextEditingController();
 
 class _LogInState extends State<LogIn> {
+  final _formKey=GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +64,9 @@ class _LogInState extends State<LogIn> {
                   signIn(
                   _emailController.text,
                       _passController.text,
-                      context);
+                      context,
+                  _formKey
+                  );
                 },
 
                 child: CustomButton(
@@ -99,7 +103,8 @@ class _LogInState extends State<LogIn> {
     );
   }
 }
-void signIn(String email, String pass, context) async{
+void signIn(String email, String pass,
+    context, _formKey) async{
   if(_formKey.currentState!.validate())
 
   {
@@ -108,7 +113,7 @@ void signIn(String email, String pass, context) async{
                 {
                   Fluttertoast.showToast(msg: "Login Successful!!"),
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HomePage())),
+                      MaterialPageRoute(builder: (context) => UserProfile())),
                 }
     ).catchError((e) {
       Fluttertoast.showToast(msg: e.messege);

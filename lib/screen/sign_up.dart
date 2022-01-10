@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kaocher_firebase/helper/custom_button.dart';
 import 'package:kaocher_firebase/helper/custom_text_field.dart';
 import 'package:kaocher_firebase/model/user_model.dart';
 import 'package:kaocher_firebase/screen/log_in.dart';
+import 'package:kaocher_firebase/screen/verify_email.dart';
 import 'package:kaocher_firebase/utills/all_color.dart';
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -27,6 +31,17 @@ TextEditingController _nameController= TextEditingController();
 
 class _SignUpState extends State<SignUp> {
   final _formKeySignUp=GlobalKey<FormState>();
+  File? image;
+
+  Future pickImageFromGallery() async {
+   final image2= await ImagePicker().pickImage(source: ImageSource.gallery);
+   if(image2==null) return;
+   final tempImage= File(image2.path);
+   setState(() {
+     this.image= tempImage;
+   });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +51,24 @@ class _SignUpState extends State<SignUp> {
           child: Column(
             children: [
               SizedBox(
-                height: 80,
+                height: 40,
               ),
-              Icon(Icons.star,
-                size: 80,color: allColor.appColor,),
+              InkWell(
+                onTap: (){
+                  pickImageFromGallery();
+                },
+                child: ClipOval(
+                    child: image!=null?
+                        Container(
+                            height: 160,
+                            width: 160,
+                            child: Image.file(image!,
+                            fit: BoxFit.cover,)):
+                    Icon(Icons.camera_alt_outlined,
+                    size: 25,),
+                  ),
+              ),
+
               SizedBox(
                 height: 20,
               ),
@@ -131,7 +160,7 @@ void signUp(String email, String password, context,_formKeySignUp)async{
 
         Fluttertoast.showToast(msg: "SignUp Successful! "),
       Navigator.push(context,
-          MaterialPageRoute(builder: (context)=>LogIn()))
+          MaterialPageRoute(builder: (context)=>VerifyEmailPage()))
     }).catchError((e){
       Fluttertoast.showToast(msg:e.message);
     });

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kaocher_firebase/screen/home_page.dart';
+import 'package:kaocher_firebase/screen/user_profile.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     if(user!.emailVerified){
       timer!.cancel();
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context)=>HomePage()));
+          MaterialPageRoute(builder: (context)=>UserProfile()));
     }
   }
 }

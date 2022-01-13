@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:kaocher_firebase/model/user_model.dart';
 import 'package:kaocher_firebase/screen/log_in.dart';
@@ -9,15 +12,25 @@ class UserProfile extends StatefulWidget {
   @override
   _UserProfileState createState() => _UserProfileState();
 }
+String? url;
 User? user=FirebaseAuth.instance.currentUser;
 
+
 class _UserProfileState extends State<UserProfile> {
-  UserModel userModel= UserModel();
+  Future getImageFromStorage() async {
+    final ref = FirebaseStorage.instance.ref().child('image/id1');
+    url = await ref.getDownloadURL();
+    setState(() {
+      url;
+    });
+  }
+    UserModel userModel = UserModel();
+
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    getImageFromStorage();
     FirebaseFirestore.instance
         .collection("users")
         .doc(user!.uid)
@@ -40,9 +53,14 @@ class _UserProfileState extends State<UserProfile> {
       body: Center(
         child: Column(
           children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundColor: Colors.pink,
+            Container(
+              height: 150,
+              width: 150,
+              child: ClipOval(
+                child: url==null? Text("Image not found"):
+                Image.network(url!,
+                fit: BoxFit.cover,),
+              ),
             ),
 
             Text("Name: ${userModel.name.toString()}",

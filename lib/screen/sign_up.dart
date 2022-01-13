@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,19 +28,19 @@ TextEditingController _comfirmPassController= TextEditingController();
 TextEditingController _ageController= TextEditingController();
 TextEditingController _phoneController= TextEditingController();
 TextEditingController _nameController= TextEditingController();
-
+File? image;
 
 class _SignUpState extends State<SignUp> {
   final _formKeySignUp=GlobalKey<FormState>();
-  File? image;
+
 
   Future pickImageFromGallery() async {
-   final image2= await ImagePicker().pickImage(source: ImageSource.gallery);
-   if(image2==null) return;
-   final tempImage= File(image2.path);
-   setState(() {
-     this.image= tempImage;
-   });
+    final image2= await ImagePicker().pickImage(source: ImageSource.gallery);
+    if(image2==null) return;
+    final tempImage= File(image2.path);
+    setState(() {
+      image= tempImage;
+    });
   }
 
   @override
@@ -58,15 +59,15 @@ class _SignUpState extends State<SignUp> {
                   pickImageFromGallery();
                 },
                 child: ClipOval(
-                    child: image!=null?
-                        Container(
-                            height: 160,
-                            width: 160,
-                            child: Image.file(image!,
-                            fit: BoxFit.cover,)):
-                    Icon(Icons.camera_alt_outlined,
+                  child: image!=null?
+                  Container(
+                      height: 160,
+                      width: 160,
+                      child: Image.file(image!,
+                        fit: BoxFit.cover,)):
+                  Icon(Icons.camera_alt_outlined,
                     size: 25,),
-                  ),
+                ),
               ),
 
               SizedBox(
@@ -131,9 +132,9 @@ class _SignUpState extends State<SignUp> {
               InkWell(
                 onTap: (){
                   signUp(_emailController.text,
-                  _passController.text,
+                      _passController.text,
                       context,
-                  _formKeySignUp);
+                      _formKeySignUp);
                 },
                 child: CustomButton(
                   height: 60,
@@ -156,9 +157,10 @@ void signUp(String email, String password, context,_formKeySignUp)async{
   if(_formKeySignUp.currentState!.validate()){
     await _auth.createUserWithEmailAndPassword
       (email: email, password: password).then((value) => {
-        saveUserDetails(),
+      saveUserDetails(),
+      saveImage(),
 
-        Fluttertoast.showToast(msg: "SignUp Successful! "),
+      Fluttertoast.showToast(msg: "SignUp Successful! "),
       Navigator.push(context,
           MaterialPageRoute(builder: (context)=>VerifyEmailPage()))
     }).catchError((e){
@@ -166,7 +168,13 @@ void signUp(String email, String password, context,_formKeySignUp)async{
     });
   }
 }
-
+void saveImage()async{
+  if(image==null) return;
+  final destination= 'image/id1';
+  final ref= FirebaseStorage.instance.
+  ref(destination);
+  ref.putFile(image!);
+}
 void saveUserDetails() async{
   FirebaseFirestore firestore1=
       FirebaseFirestore.instance;
@@ -180,7 +188,7 @@ void saveUserDetails() async{
   userModel.name= _nameController.text;
 
   await firestore1.collection("users")
-  .doc(user.uid)
-  .set(userModel.toMap());
+      .doc(user.uid)
+      .set(userModel.toMap());
   Fluttertoast.showToast(msg: "Data Saved Successfully");
 }

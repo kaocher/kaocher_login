@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kaocher_firebase/model/user_model.dart';
 import 'package:kaocher_firebase/screen/log_in.dart';
 class UserProfile extends StatefulWidget {
@@ -13,6 +15,7 @@ class UserProfile extends StatefulWidget {
   _UserProfileState createState() => _UserProfileState();
 }
 String? url;
+File? image;
 User? user=FirebaseAuth.instance.currentUser;
 
 
@@ -62,6 +65,20 @@ class _UserProfileState extends State<UserProfile> {
                 fit: BoxFit.cover,),
               ),
             ),
+            ElevatedButton(onPressed: (){
+
+              Future pickImageFromGallery() async {
+                final image2= await ImagePicker().pickImage(source: ImageSource.gallery);
+                if(image2==null) return;
+                final tempImage= File(image2.path);
+                setState(() {
+                  image= tempImage;
+                });
+                saveImage();
+              }
+
+            },
+                child: Text("Change Picture")),
 
             Text("Name: ${userModel.name.toString()}",
             style: TextStyle(
@@ -93,5 +110,12 @@ class _UserProfileState extends State<UserProfile> {
         ),
       ),
     );
+  }
+  void saveImage()async{
+    if(image==null) return;
+    final destination= 'image/id1';
+    final ref= FirebaseStorage.instance.
+    ref(destination);
+    ref.putFile(image!);
   }
 }

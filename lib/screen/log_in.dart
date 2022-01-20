@@ -36,8 +36,8 @@ class _LogInState extends State<LogIn> {
               SizedBox(
                 height: 80,
               ),
-              Icon(Icons.star,
-              size: 80,color: allColor.appColor,),
+              Icon(Icons.contact_page_outlined,
+              size: 150,color: allColor.appColor,),
               SizedBox(
                 height: 20,
               ),

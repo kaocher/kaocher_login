@@ -46,6 +46,7 @@ class _UserProfileState extends State<UserProfile> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,9 +66,7 @@ class _UserProfileState extends State<UserProfile> {
                 fit: BoxFit.cover,),
               ),
             ),
-            ElevatedButton(onPressed: (){
-
-              Future pickImageFromGallery() async {
+            ElevatedButton(onPressed: () async {
                 final image2= await ImagePicker().pickImage(source: ImageSource.gallery);
                 if(image2==null) return;
                 final tempImage= File(image2.path);
@@ -75,10 +74,16 @@ class _UserProfileState extends State<UserProfile> {
                   image= tempImage;
                 });
                 saveImage();
-              }
-
+                getImageFromStorage();
+                setState(() {
+                  url;
+                });
             },
                 child: Text("Change Picture")),
+            ElevatedButton(onPressed: (){
+
+            },
+                child: Text("Refresh")),
 
             Text("Name: ${userModel.name.toString()}",
             style: TextStyle(

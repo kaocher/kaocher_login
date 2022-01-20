@@ -34,8 +34,9 @@ class _SignUpState extends State<SignUp> {
   final _formKeySignUp=GlobalKey<FormState>();
 
 
-  Future pickImageFromGallery() async {
-    final image2= await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future pickImageFromGallery(source) async {
+    final image2= await ImagePicker().pickImage(
+        source: source);
     if(image2==null) return;
     final tempImage= File(image2.path);
     setState(() {
@@ -56,7 +57,7 @@ class _SignUpState extends State<SignUp> {
               ),
               InkWell(
                 onTap: (){
-                  pickImageFromGallery();
+
                 },
                 child: ClipOval(
                   child: image!=null?
@@ -67,6 +68,28 @@ class _SignUpState extends State<SignUp> {
                         fit: BoxFit.cover,)):
                   Icon(Icons.camera_alt_outlined,
                     size: 25,),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: (){
+                          pickImageFromGallery(ImageSource.gallery);
+                        },
+                      child: Text("Take from Gallery")),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    ElevatedButton(
+                        onPressed: (){
+                          pickImageFromGallery(ImageSource.camera);
+                        },
+                        child: Text("Take from Camera"))
+                  ],
                 ),
               ),
 
